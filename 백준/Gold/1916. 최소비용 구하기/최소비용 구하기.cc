@@ -6,7 +6,7 @@
 using namespace std;
 
 vector<vector<pair<int, int>>> paths;
-vector<int> minDists;
+vector<bool> visited;
 
 int main() {
     ios::sync_with_stdio(0);
@@ -15,8 +15,8 @@ int main() {
     int n, m;
     cin >> n >> m;
 
-    minDists.resize(n + 1, 100000000);
     paths.resize(n + 1);
+    visited.resize(n + 1, false);
 
     for (int i = 0; i < m; i++)
     {
@@ -28,8 +28,7 @@ int main() {
     int start, end;
     cin >> start >> end;
 
-    minDists[start] = 0;
-    priority_queue<pair<int, int>> pq; // < cost, location >
+    priority_queue<pair<int, int>, vector<pair<int,int>>, greater<pair<int,int>>> pq; // < cost, location >
     pq.push(make_pair(0, start));
 
     while (!pq.empty())
@@ -38,20 +37,18 @@ int main() {
         int distance = pq.top().first;
         pq.pop();
 
-        if (minDists[current] < distance) continue;
-
-        for (int i = 0; i < paths[current].size(); i++)
+        if (current == end)
         {
-            int next = paths[current][i].first;
-            int nextDist = distance + paths[current][i].second;
+            std::cout << distance;
+            break;
+        }
+        if (visited[current]) continue;
+        visited[current] = true;
 
-            if (nextDist < minDists[next])
-            {
-                minDists[next] = nextDist;
-                pq.push(make_pair(nextDist, next));
-            }
+        for (pair<int, int> next : paths[current])
+        {
+            if (!visited[next.first])
+                pq.push(make_pair(distance + next.second, next.first));
         }
     }
-
-    cout << minDists[end];
 }
