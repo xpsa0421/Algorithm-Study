@@ -4,28 +4,29 @@
 #include <cmath>
 using namespace std;
 
+vector<bool> isPrime(246913, true);
+
 int main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     
+    // calculate primes
+    isPrime[1] = false;
+    for (int i = 2; i <= sqrt(246912); i++)
+    {
+        if (!isPrime[i]) continue;
+
+        for (int j = i + i; j <= 246912; j += i)
+        {
+            isPrime[j] = false;
+        }
+    }
+
     int n;
     cin >> n;
 
     while (n != 0)
     {
-        vector<bool> isPrime(2 * n + 1, true);
-        isPrime[1] = false;
-
-        for (int i = 2; i <= sqrt(2 * n); i++)
-        {
-            if (!isPrime[i]) continue;
-
-            for (int j = i + i; j <= 2 * n; j += i)
-            {
-                isPrime[j] = false;
-            }
-        }
-
         int ans = 0;
         for (int i = n + 1; i <= 2 * n; i++)
         {
