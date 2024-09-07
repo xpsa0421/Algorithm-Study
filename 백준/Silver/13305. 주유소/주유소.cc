@@ -19,11 +19,12 @@ int main()
 	for (int i = 0; i < n - 1; i++) cin >> dists[i];
 	for (int i = 0; i < n; i++) cin >> prices[i];
 
-	int total = 0, curCity = 0;
+	long long total = 0;
+	int curCity = 0;
 	while (curCity < n - 1)
 	{
 		// 다음으로 기름값이 싼 곳까지 이동
-		int dest = 0, dist = 0;
+		int dest = 0; long long dist = 0;
 		for (int c = curCity + 1; c < n; c++)
 		{
 			// 이동
