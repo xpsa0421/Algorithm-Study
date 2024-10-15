@@ -108,6 +108,10 @@
 |9084. 동전|[링크](./%EB%B0%B1%EC%A4%80/Gold/9084.%E2%80%85%EB%8F%99%EC%A0%84/%EB%8F%99%EC%A0%84.cc)|
 |9205. 맥주 마시면서 걸어가기|[링크](./%EB%B0%B1%EC%A4%80/Gold/9205.%E2%80%85%EB%A7%A5%EC%A3%BC%E2%80%85%EB%A7%88%EC%8B%9C%EB%A9%B4%EC%84%9C%E2%80%85%EA%B1%B8%EC%96%B4%EA%B0%80%EA%B8%B0/README.md)|
 |9251. LCS|[링크](./%EB%B0%B1%EC%A4%80/Gold/9251.%E2%80%85LCS/README.md)|
+### 🚀 Platinum
+| 문제번호 | 링크 |
+| ----- | ----- |
+|1786. 찾기|[링크](./%EB%B0%B1%EC%A4%80/Platinum/1786.%E2%80%85%EC%B0%BE%EA%B8%B0/README.md)|
 ### 🚀 Silver
 | 문제번호 | 링크 |
 | ----- | ----- |
