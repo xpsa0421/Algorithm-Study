@@ -3,28 +3,30 @@
 #include <algorithm>
 using namespace std;
 
-int nums[20];
 int n, s, ans;
+int nums[20];
 
-void Search(int i, int total)
+void solve(int k, int curSum)
 {
-    if (i == n) return;
+	if (k == n)
+	{
+		if (curSum == s) ans++;
+		return;
+	}
 
-    // Include this number
-    if (total + nums[i] == s) ans++;
-    Search(i + 1, total + nums[i]);
-
-    // Not include this number
-    Search(i + 1, total);
+	solve(k + 1, curSum + nums[k]);
+	solve(k + 1, curSum);
 }
 
-int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0);
+int main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(NULL);
 
-    cin >> n >> s;
-    for (int i = 0; i < n; i++) cin >> nums[i];
+	cin >> n >> s;
+	for (int i = 0; i < n; i++) cin >> nums[i];
+	solve(0, 0);
 
-    Search(0, 0);
-    cout << ans;
+	if (s == 0) ans--;
+	cout << ans;
 }
