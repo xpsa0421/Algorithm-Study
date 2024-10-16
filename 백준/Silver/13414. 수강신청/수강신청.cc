@@ -2,7 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <cstring>
-#include <unordered_set>
+#include <unordered_map>
 using namespace std;
 
 int main()
@@ -10,41 +10,28 @@ int main()
 	ios_base::sync_with_stdio(0);
 	cin.tie(NULL);
 
-	vector<string> applicants;
-	unordered_multiset<string> ms;
-	unordered_set<string> unique;
-
 	int k, l;
-	string s;
 	cin >> k >> l;
+	unordered_map<string, int> applicants;
 
-	while (l--)
+	string s;
+	for (int i = 0; i < l; i++)
 	{
 		cin >> s;
-		applicants.push_back(s);
-		ms.insert(s);
-		unique.insert(s);
+		applicants[s] = i;
 	}
 
-	// multiset에 중복 지원만 남도록 함
-	for (string uni : unique)
-	{
-		ms.erase(ms.find(uni));
-	}
+	vector<pair<string, int>> vec(applicants.begin(), applicants.end());
+	sort(vec.begin(), vec.end(),
+		[](const pair<string, int>& a, const pair<string, int>& b)
+		{
+			return a.second < b.second;
+		});
 
-	for (string ap : applicants)
+	int i = 0;
+	for (auto applicant : vec)
 	{
-		// 중복 지원이 없으면
-		auto it = ms.find(ap);
-		if (it == ms.end())
-		{
-			if (k == 0) break;
-			k--;
-			cout << ap << '\n';
-		}
-		else
-		{
-			ms.erase(it);
-		}
+		cout << applicant.first << '\n';
+		if (++i == k) break;
 	}
 }
