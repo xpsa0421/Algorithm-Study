@@ -5,23 +5,37 @@
 #include <algorithm>
 using namespace std;
 
-int n;
-vector<pair<int, int>> adj[301];
-priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq; // cost, b
-bool isConnected[301];
+vector<int> parents(1000, -1);
+vector<tuple<int, int, int>> edges;
+
+int find(int x)
+{
+	if (parents[x] < 0) return x;
+	else return parents[x] = find(parents[x]);
+}
+
+bool merge(int x, int y)
+{
+	x = find(x); y = find(y);
+	if (x == y) return false;
+	if (parents[x] == parents[y]) parents[x]--;
+	if (parents[x] < parents[y]) parents[y] = x;
+	else parents[x] = y;
+	return true;
+}
 
 int main()
 {
 	ios_base::sync_with_stdio(0);
 	cin.tie(0);
 
+	int n;
 	cin >> n;
-	int costSelf = 0;
+
 	for (int i = 1; i <= n; i++)
 	{
-		cin >> costSelf;
-		adj[i].push_back({ costSelf, 0 });
-		adj[0].push_back({ costSelf, i });
+		int c; cin >> c;
+		edges.push_back({ c, i, 0 });
 	}
 
 	for (int i = 1; i <= n; i++)
@@ -30,30 +44,23 @@ int main()
 		{
 			int c; cin >> c;
 			if (i >= j) continue;
-			adj[i].push_back({ c, j });
-			adj[j].push_back({ c, i });
+			edges.push_back({ c,i,j });
 		}
 	}
 
-	// 처음 우물을 만드는 경우
-	for (auto con : adj[0]) pq.push(con);
-	isConnected[0] = true;
+	n++;
+	sort(edges.begin(), edges.end());
+	int cnt = 0, ans = 0;
 
-	int cnt = 0, totalCost = 0;
-	while (cnt < n)
+	for (int i = 0; i < edges.size(); i++)
 	{
-		int cost, to;
-		tie(cost, to) = pq.top(); pq.pop();
-		if (isConnected[to]) continue;
+		int a, b, c;
+		tie(c, a, b) = edges[i];
+		if (!merge(a, b)) continue;
 
-		isConnected[to] = true;
-		cnt++; totalCost += cost;
-
-		for (auto& next : adj[to])
-		{
-			if (!isConnected[next.second]) pq.push(next);
-		}
+		ans += c;
+		if (++cnt == n - 1) break;
 	}
 
-	cout << totalCost;
+	cout << ans;
 }
