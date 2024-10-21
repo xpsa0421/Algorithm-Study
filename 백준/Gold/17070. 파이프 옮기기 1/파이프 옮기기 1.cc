@@ -9,6 +9,7 @@ using namespace std;
 // 01:37
 int n;
 int map[16][16];
+int dp[16][16][3];
 int ans = 0;
 
 int main()
@@ -21,44 +22,35 @@ int main()
 		for (int j = 0; j < n; j++)
 			cin >> map[i][j];
 
-	queue<tuple<int, int, int>> toVisit; // r, c, shape
-	toVisit.push({ 0,1,0 });
-	
-	while (!toVisit.empty())
+	dp[0][1][0] = 1;
+	for (int i = 0; i < n; i++)
 	{
-		auto cur = toVisit.front(); toVisit.pop();
-		int curR = get<0>(cur), curC = get<1>(cur), curS = get<2>(cur);
-
-		// Base condition
-		if (curR == n - 1 && curC == n - 1)
+		for (int j = 1; j < n; j++)
 		{
-			ans++;
-			continue;
-		}
+			if (i == 1 && j == 1) continue;
+			if (map[i][j] == 1) continue;
 
-		// 가로
-		int nexR, nexC, nexS;
-		if (curS != 1)
-		{
-			nexR = curR, nexC = curC + 1, nexS = 0;
-			if (nexC != n && map[nexR][nexC] == 0)
-				toVisit.push({ nexR, nexC, nexS });
-		}
+			// 가로 (가로, 대각선 -> 가로)
+			dp[i][j][0] += dp[i][j - 1][0];
+			dp[i][j][0] += dp[i][j - 1][2];
 
-		// 세로
-		if (curS != 0)
-		{
-			nexR = curR + 1, nexC = curC, nexS = 1;
-			if (nexR != n && map[nexR][nexC] == 0)
-				toVisit.push({ nexR, nexC, nexS });
+			if (i != 0)
+			{
+				// 세로 (세로, 대각선 -> 세로)
+				dp[i][j][1] += dp[i - 1][j][1];
+				dp[i][j][1] += dp[i - 1][j][2];
+				
+				// 대각선
+				if (map[i - 1][j] == 0 && map[i][j - 1] == 0)
+				{
+					dp[i][j][2] += dp[i - 1][j - 1][0];
+					dp[i][j][2] += dp[i - 1][j - 1][1];
+					dp[i][j][2] += dp[i - 1][j - 1][2];
+				}
+			}
 		}
-
-		// 대각선
-		nexR = curR + 1, nexC = curC + 1, nexS = 2;
-		if (nexR != n && nexC != n &&
-			(map[nexR][nexC] == 0 && map[curR][nexC] == 0 && map[nexR][curC] == 0))
-			toVisit.push({ nexR, nexC, nexS });
 	}
 
+	ans = dp[n - 1][n - 1][0] + dp[n - 1][n - 1][1] + dp[n - 1][n - 1][2];
 	cout << ans;
 }
