@@ -7,31 +7,10 @@ using namespace std;
 
 string sudoku[9];
 vector<pair<int,int>> blanks;
+bool rowState[9][10];
+bool colState[9][10];
+bool boxState[3][3][10];
 bool ansFound;
-
-// Is it okay to put num at blank bIdx?
-bool isOkaySudoku(int bIdx, char num)
-{
-	int row = blanks[bIdx].first;
-	int col = blanks[bIdx].second;
-
-	// row
-	for (int c = 0; c < 9; c++)
-		if (sudoku[row][c] == num) return false;
-
-	// column
-	for (int r = 0; r < 9; r++)
-		if (sudoku[r][col] == num) return false;
-
-	// box
-	int rStart = (row / 3) * 3;
-	int cStart = (col / 3) * 3;
-	for (int dr = 0; dr < 3; dr++)
-		for (int dc = 0; dc < 3; dc++)
-			if (sudoku[rStart + dr][cStart + dc] == num) return false;
-
-	return true;
-}
 
 void backtracking(int bIdx)
 {
@@ -46,11 +25,15 @@ void backtracking(int bIdx)
 	int r = blanks[bIdx].first, c = blanks[bIdx].second;
 	for (int i = 1; i <= 9; i++)
 	{
-		if (!isOkaySudoku(bIdx, i + '0')) continue;
+		if (rowState[r][i] || colState[c][i] || boxState[r / 3][c / 3][i]) continue;
+
 		sudoku[r][c] = i + '0';
+		rowState[r][i] = true; colState[c][i] = true; boxState[r / 3][c / 3][i] = true;
 		backtracking(bIdx + 1);
+
 		if (ansFound) return;
 		sudoku[r][c] = '0';
+		rowState[r][i] = false; colState[c][i] = false; boxState[r / 3][c / 3][i] = false;
 	}
 }
 
@@ -64,7 +47,15 @@ int main()
 		cin >> sudoku[i];
 		for (int j = 0; j < 9; j++)
 		{
-			if (sudoku[i][j] == '0') blanks.push_back({i,j});
+			int num = sudoku[i][j] - '0';
+			if (num == 0)
+				blanks.push_back({i,j});
+			else
+			{
+				rowState[i][num] = true;
+				colState[j][num] = true;
+				boxState[i / 3][j / 3][num] = true;
+			}
 		}
 	}
 
